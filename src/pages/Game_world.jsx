@@ -7,7 +7,7 @@ import Tennis_animation_compressed from '../components/models_components/Tennis_
 const Game_world = () => {
   return (
     <>
-        <Environment files='environment/shanghai_bund_4k.hdr' background blur={0} />
+        <Environment files='environment/purple_sky.hdr' background blur={0} />
 
         <Suspense >
           <Tennis_animation_compressed />

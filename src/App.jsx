@@ -7,7 +7,7 @@ import Game_world from './pages/Game_world'
 
 function App() {
   return (
-    <Canvas className='canvas' camera={{fov: 75, position: [0, 3, 10]}} >
+    <Canvas className='canvas' camera={{fov: 75, near: 0.1, far: 5000, position: [0, 8, 15]}} >
       <OrbitControls />
       <Game_world />
       

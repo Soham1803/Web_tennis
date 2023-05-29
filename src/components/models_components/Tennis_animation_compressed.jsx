@@ -13,7 +13,7 @@ export default function Tennis_animation_compressed(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
-        <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]} scale={0.04}>
+        <group name="Sketchfab_model" position={[0, -10, 0]} rotation={[-Math.PI / 2, 0, Math.PI/4]} scale={3}>
           <group name="Tennis_CourtFBX" rotation={[Math.PI / 2, 0, 0]}>
             <group name="Object_2">
               <group name="RootNode">
