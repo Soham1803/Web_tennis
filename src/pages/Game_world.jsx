@@ -16,10 +16,11 @@ const Game_world = () => {
       <Environment files="environment/purple_sky.hdr" background blur={0} />
       <directionalLight
         color="purple"
+        intensity={10}
         position={[0, 7, 10]}
         castShadow
-        shadow-mapSize-height={512}
-        shadow-mapSize-width={512}
+        shadow-mapSize-height={1024}
+        shadow-mapSize-width={1024}
         // ref={dirLight}
       />
 

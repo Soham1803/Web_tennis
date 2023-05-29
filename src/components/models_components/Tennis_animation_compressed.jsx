@@ -27,8 +27,8 @@ export default function Tennis_animation_compressed(props) {
           position={[0, -10, 0]}
           rotation={[-Math.PI / 2, 0, Math.PI / 4]}
           scale={3}
-          castShadow
-          receiveShadow
+          // castShadow
+          // receiveShadow
         >
           <group name="Tennis_CourtFBX" rotation={[Math.PI / 2, 0, 0]} >
             <group name="Object_2">
@@ -38,8 +38,8 @@ export default function Tennis_animation_compressed(props) {
                   position={[-206.89, 58.71, 15.18]}
                   rotation={[0.7, 0, 0]}
                   scale={[0.04, 0.03, 0.04]}
-                  castShadow
-                  receiveShadow
+                  // castShadow
+                  // receiveShadow
                 >
                   <mesh
                     name="Tennis_Ball_09_-_Default_0"
@@ -54,8 +54,8 @@ export default function Tennis_animation_compressed(props) {
                   position={[-218.05, 66.72, 19.29]}
                   rotation={[0, -1.57, 0]}
                   scale={[0.03, 0.05, 0.02]}
-                  castShadow
-                  receiveShadow
+                  // castShadow
+                  // receiveShadow
                 >
                   <mesh
                     name="Tennis_Racketzz_02_-_Default_0"
@@ -84,8 +84,8 @@ export default function Tennis_animation_compressed(props) {
                   position={[228.03, 66.72, -44.56]}
                   rotation={[0, -1.57, 0]}
                   scale={[0.03, 0.05, 0.02]}
-                  castShadow
-                  receiveShadow
+                  // castShadow
+                  // receiveShadow
                 >
                   <mesh
                     name="Tennis_Racketzz001_02_-_Default_0"
@@ -119,7 +119,7 @@ export default function Tennis_animation_compressed(props) {
                   name="Court"
                   position={[0, -6.62, 6.62]}
                   rotation={[-Math.PI / 2, 0, 0]}
-                  receiveShadow
+                  // receiveShadow
                 >
                   <mesh
                     name="Court_01_-_Default_0"
@@ -139,8 +139,8 @@ export default function Tennis_animation_compressed(props) {
                   position={[0.18, -35, 6.86]}
                   rotation={[-Math.PI / 2, 0, 0]}
                   scale={[0.08, 1, 0.85]}
-                  receiveShadow
-                  castShadow
+                  // receiveShadow
+                  // castShadow
                 >
                   <mesh
                     name="Net_02_-_Default_0"
