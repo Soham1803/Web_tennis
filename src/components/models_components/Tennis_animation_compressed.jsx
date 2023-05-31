@@ -37,9 +37,9 @@ export default function Tennis_animation_compressed(props) {
                 <RigidBody colliders='ball' restitution={2}>
                   <group
                     name="Tennis_Ball"
-                    position={[-206.89, 58.71, 15.18]}
+                    position={[-86.89, 300, 20.18]}
                     rotation={[0.7, 0, 0]}
-                    scale={[0.04, 0.03, 0.04]}
+                    scale={[0.04, 0.04, 0.04]}
                     // castShadow
                     // receiveShadow
                   >

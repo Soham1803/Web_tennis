@@ -35,11 +35,11 @@ const Game_world = () => {
       <Suspense>
         <Physics 
           gravity={[0, -70, 0]} 
-          // debug 
+          debug 
         >
 
           <RigidBody colliders='ball' restitution={2}>
-            <mesh scale={[50, 50, 50]} position={[0, 700, 0]} >
+            <mesh scale={[50, 50, 50]} position={[-130, 700, 30]} >
               <sphereBufferGeometry />
               <meshStandardMaterial />
             </mesh>
