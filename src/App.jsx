@@ -7,7 +7,8 @@ function App() {
   return (
     <Canvas
       className="canvas"
-      camera={{ fov: 75, near: 0.1, far: 5000, position: [0, 8, 15] }}
+      camera={{ fov: 75, near: 0.1, far: 5000, position: [0, 700, 1000] }}
+      
       shadows
       colorManagement
     >
