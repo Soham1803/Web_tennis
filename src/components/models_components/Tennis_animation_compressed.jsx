@@ -18,21 +18,19 @@ export default function Tennis_animation_compressed(props) {
 
   // console.log(names);
 
-  const {camera, mouse } = useThree();
+  const { camera, mouse } = useThree();
 
-  const [mousePos, setMousePos] = useState([-218.05, 66.72]);
+  const [mousePos, setMousePos] = useState([200 * Math.PI, 300]);
 
   const rac1Ref = useRef();
   const rac2Ref = useRef();
 
-  useFrame(({mouse, viewport}) => {
-    // rac1Ref.current.position.set(mouse.x, mouse.y);
+  useFrame(({ mouse, viewport }) => {
+    const racLoc = rac1Ref.current.position;
+    console.log(`racket location: ${racLoc}`);
     // console.log(mouse.x, mouse.y)
-    setMousePos([mouse.x, mouse.y])
-  })
-
-
-  
+    setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
+  });
 
   // useEffect(() => {
   //   actions[names[0]].play();
@@ -44,15 +42,18 @@ export default function Tennis_animation_compressed(props) {
         <group
           name="Sketchfab_model"
           position={[0, -10, 0]}
-          rotation={[-Math.PI / 2, 0, Math.PI / 4]}
+          rotation={[-Math.PI / 2, 0, 0]}
           scale={3}
           // castShadow
           // receiveShadow
         >
-          <group name="Tennis_CourtFBX" rotation={[Math.PI / 2, 0, 0]} >
+          <group
+            name="Tennis_CourtFBX"
+            rotation={[Math.PI / 2, Math.PI / 4, 0]}
+          >
             <group name="Object_2">
               <group name="RootNode">
-                <RigidBody colliders='ball' restitution={2}>
+                <RigidBody colliders="ball" restitution={2}>
                   <group
                     name="Tennis_Ball"
                     position={[-86.89, 300, 20.18]}
@@ -71,33 +72,43 @@ export default function Tennis_animation_compressed(props) {
                   </group>
                 </RigidBody>
 
-                <RigidBody type='fixed'>
+                <RigidBody
+                  type="fixed"
+                  position={[ -200, (mousePos[1] + Math.PI / 4) / 10, mousePos[0] / 10,]}
+                >
                   <group
                     name="Tennis_Racketzz"
-                    position={[...mousePos, 19.29]}
+                    // position={[...mousePos, 19.29]}
                     rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
-                    //ref={rac1Ref}
+                    ref={rac1Ref}
                     // castShadow
                     // receiveShadow
                   >
+                    {console.log(...mousePos)};
                     <mesh
                       name="Tennis_Racketzz_02_-_Default_0"
-                      geometry={nodes["Tennis_Racketzz_02_-_Default_0"].geometry}
+                      geometry={
+                        nodes["Tennis_Racketzz_02_-_Default_0"].geometry
+                      }
                       material={materials["02_-_Default_0"]}
                       castShadow
                       receiveShadow
                     />
                     <mesh
                       name="Tennis_Racketzz_03_-_Default_0"
-                      geometry={nodes["Tennis_Racketzz_03_-_Default_0"].geometry}
+                      geometry={
+                        nodes["Tennis_Racketzz_03_-_Default_0"].geometry
+                      }
                       material={materials["03_-_Default_0"]}
                       castShadow
                       receiveShadow
                     />
                     <mesh
                       name="Tennis_Racketzz_07_-_Default_0"
-                      geometry={nodes["Tennis_Racketzz_07_-_Default_0"].geometry}
+                      geometry={
+                        nodes["Tennis_Racketzz_07_-_Default_0"].geometry
+                      }
                       material={materials["07_-_Default_0"]}
                       castShadow
                       receiveShadow
@@ -164,39 +175,39 @@ export default function Tennis_animation_compressed(props) {
                   />
                   <CuboidCollider args={[285, 140, 5]} position={[0, 5, 9.5]} />
                 </group>
-                  {/* <RigidBody type='fixed'> */}
-                  <group
-                    name="Net"
-                    position={[0.18, -35, 6.86]}
-                    rotation={[-Math.PI / 2, 0, 0]}
-                    scale={[0.08, 1, 0.85]}
-                    // receiveShadow
-                    // castShadow
-                  >
-                    <mesh
-                      name="Net_02_-_Default_0"
-                      geometry={nodes["Net_02_-_Default_0"].geometry}
-                      material={materials["02_-_Default"]}
-                      castShadow
-                      receiveShadow
-                    />
-                    <mesh
-                      name="Net_03_-_Default_0"
-                      geometry={nodes["Net_03_-_Default_0"].geometry}
-                      material={materials["03_-_Default"]}
-                      castShadow
-                      receiveShadow
-                    />
-                    <mesh
-                      name="Net_07_-_Default_0"
-                      geometry={nodes["Net_07_-_Default_0"].geometry}
-                      material={materials["07_-_Default"]}
-                      castShadow
-                      receiveShadow
-                    />
-                  </group>
-                  <CuboidCollider args={[2, 15, 123]} position={[0, 10, 2]} />
-                  {/* </RigidBody> */}
+                {/* <RigidBody type='fixed'> */}
+                <group
+                  name="Net"
+                  position={[0.18, -35, 6.86]}
+                  rotation={[-Math.PI / 2, 0, 0]}
+                  scale={[0.08, 1, 0.85]}
+                  // receiveShadow
+                  // castShadow
+                >
+                  <mesh
+                    name="Net_02_-_Default_0"
+                    geometry={nodes["Net_02_-_Default_0"].geometry}
+                    material={materials["02_-_Default"]}
+                    castShadow
+                    receiveShadow
+                  />
+                  <mesh
+                    name="Net_03_-_Default_0"
+                    geometry={nodes["Net_03_-_Default_0"].geometry}
+                    material={materials["03_-_Default"]}
+                    castShadow
+                    receiveShadow
+                  />
+                  <mesh
+                    name="Net_07_-_Default_0"
+                    geometry={nodes["Net_07_-_Default_0"].geometry}
+                    material={materials["07_-_Default"]}
+                    castShadow
+                    receiveShadow
+                  />
+                </group>
+                <CuboidCollider args={[2, 15, 123]} position={[0, 10, 2]} />
+                {/* </RigidBody> */}
               </group>
             </group>
           </group>
