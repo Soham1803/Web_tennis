@@ -1,15 +1,13 @@
 import React from "react";
 import { Suspense, useState, useRef } from "react";
+import { DirectionalLight, DirectionalLightHelper } from "three";
+
 import { extend } from "@react-three/fiber";
 import { Environment, useHelper } from "@react-three/drei";
+import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
 import Tennis_animation_compressed from "../components/models_components/Tennis_animation_compressed";
 
-import { MeshRefractionMaterial } from "@react-three/drei";
-extend ({ MeshRefractionMaterial });
-
-import { DirectionalLight, DirectionalLightHelper } from "three";
-import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
 const Game_world = () => {
 
@@ -45,18 +43,11 @@ const Game_world = () => {
             </mesh>
           </RigidBody>
 
-          {/* <RigidBody type="fixed" > */}
-            <Tennis_animation_compressed />
-            <CuboidCollider args={[]} />
-          {/* </RigidBody> */}
+          <Tennis_animation_compressed />          
          
         </Physics>
       </Suspense>
-      {/* <mesh>
-          <boxGeometry />
-          <meshStandardMaterial />
-        </mesh> */}
-      {/* <ambientLight /> */}
+      
       <hemisphereLight color="yellow" groundColor="blue" />
     </>
   );

@@ -6,17 +6,17 @@ Command: npx gltfjsx@6.1.4 Tennis_animation_compressed.glb
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-
 import { useFrame, useThree } from "@react-three/fiber";
 
 export default function Tennis_animation_compressed(props) {
+
   const group = useRef();
+
   const { nodes, materials, animations } = useGLTF(
     "../../../public/models/Tennis_animation_compressed.glb"
   );
-  const { actions, names } = useAnimations(animations, group);
 
-  // console.log(names);
+  const { actions, names } = useAnimations(animations, group);
 
   const { camera, mouse } = useThree();
 
@@ -32,9 +32,10 @@ export default function Tennis_animation_compressed(props) {
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
   });
 
-  // useEffect(() => {
-  //   actions[names[0]].play();
-  // }, []);
+  // For pre built animation
+  /** useEffect(() => {
+     actions[names[0]].play();
+   }, []); **/
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -72,13 +73,13 @@ export default function Tennis_animation_compressed(props) {
                   </group>
                 </RigidBody>
 
+            // Left racket mesh
                 <RigidBody
                   type="fixed"
                   position={[ -200, (mousePos[1] + Math.PI / 4) / 10, mousePos[0] / 10,]}
                 >
                   <group
                     name="Tennis_Racketzz"
-                    // position={[...mousePos, 19.29]}
                     rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
                     ref={rac1Ref}
@@ -116,6 +117,7 @@ export default function Tennis_animation_compressed(props) {
                   </group>
                 </RigidBody>
 
+            // Right racket mesh
                 <RigidBody>
                   <group
                     name="Tennis_Racketzz001"
@@ -155,6 +157,7 @@ export default function Tennis_animation_compressed(props) {
                     />
                   </group>
                 </RigidBody>
+
                 <group
                   name="Court"
                   position={[0, -6.62, 6.62]}
@@ -175,7 +178,7 @@ export default function Tennis_animation_compressed(props) {
                   />
                   <CuboidCollider args={[285, 140, 5]} position={[0, 5, 9.5]} />
                 </group>
-                {/* <RigidBody type='fixed'> */}
+                
                 <group
                   name="Net"
                   position={[0.18, -35, 6.86]}
@@ -207,7 +210,7 @@ export default function Tennis_animation_compressed(props) {
                   />
                 </group>
                 <CuboidCollider args={[2, 15, 123]} position={[0, 10, 2]} />
-                {/* </RigidBody> */}
+
               </group>
             </group>
           </group>
