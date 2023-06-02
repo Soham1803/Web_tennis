@@ -29,8 +29,8 @@ const Game_world = () => {
         // ref={dirLight}
       />
 
-      {/* <axesHelper args={[1000]} />
-      <gridHelper args={[1000]} /> */}
+      <axesHelper args={[1000]} />
+      <gridHelper args={[1000]} />
 
       <Suspense>
         <Physics 
