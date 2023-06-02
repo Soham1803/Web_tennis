@@ -1,19 +1,34 @@
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
+import { OrbitControls } from "@react-three/drei";
+import Game_world from "./pages/Game_world";
 
-import { OrbitControls } from '@react-three/drei'
-import Game_world from './pages/Game_world'
+const CustomCamera = () => {
+  const {camera, mouse } = useThree();
 
-
-function App() {
-  return (
-    <Canvas className='canvas' camera={{fov: 75, near: 0.1, far: 5000, position: [0, 8, 15]}} >
-      <OrbitControls />
-      <Game_world />
-      
-        
-    </Canvas>
-  )
+  return useFrame(() => {
+    
+    camera.position.set(0, 700, 1000);
+    camera.lookAt(0,0,0);
+  })
 }
 
-export default App
+function App() {
+
+  
+  return (
+    <Canvas
+      className="canvas"
+      camera={{ fov: 75, near: 0.1, far: 5000, position: [0, 700, 1000] }}
+      
+      shadows
+      colorManagement
+    >
+      <CustomCamera />
+      <OrbitControls />
+      <Game_world />
+    </Canvas>
+  );
+}
+
+export default App;
