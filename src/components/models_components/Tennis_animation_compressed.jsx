@@ -20,7 +20,7 @@ export default function Tennis_animation_compressed(props) {
 
   const { camera, mouse } = useThree();
 
-  const [mousePos, setMousePos] = useState([200, 300]);
+  const [mousePos, setMousePos] = useState([200, 1000]);
 
   const rac1Ref = useRef();
   const rac2Ref = useRef();
@@ -54,11 +54,15 @@ export default function Tennis_animation_compressed(props) {
           >
             <group name="Object_2">
               <group name="RootNode">
+
+                // Helpers
+                <axesHelper args={[1000]} />
+                <gridHelper args={[1000]} />
+
                 // Tennis ball
-                <RigidBody colliders="ball" restitution={2}>
+                <RigidBody colliders="ball" restitution={2} position={[-200, 300, 0]} >
                   <group
                     name="Tennis_Ball"
-                    position={[-86.89, 300, 20.18]}
                     rotation={[0.7, 0, 0]}
                     scale={[0.04, 0.04, 0.04]}
                     // castShadow
@@ -76,12 +80,14 @@ export default function Tennis_animation_compressed(props) {
 
             // Left racket mesh
                 <RigidBody
-                  type="fixed"
-                  position={[ -200, (mousePos[1] + Math.PI / 4) / 10, mousePos[0] / 10,]}
+                  type="kinematicPosition"
+                  position={[ -200, (mousePos[1]) / 10, mousePos[0] / 10,]}
+                  rotation={[0, -Math.PI/2, 0]}
+                  ccd
                 >
                   <group
                     name="Tennis_Racketzz"
-                    rotation={[0, -1.57, 0]}
+                    // rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
                     ref={rac1Ref}
                     // castShadow

@@ -29,7 +29,7 @@ function App() {
       shadows
       colorManagement
     >
-      <CustomCamera />
+      {/* <CustomCamera /> */}
       <OrbitControls />
       <Game_world />
     </Canvas>
