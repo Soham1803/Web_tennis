@@ -13,21 +13,21 @@ export default function Tennis_animation_compressed(props) {
   const group = useRef();
 
   const { nodes, materials, animations } = useGLTF(
-    "../../../public/models/Tennis_animation_compressed.glb"
+    "/models/Tennis_animation_compressed.glb"
   );
 
   const { actions, names } = useAnimations(animations, group);
 
   const { camera, mouse } = useThree();
 
-  const [mousePos, setMousePos] = useState([200 * Math.PI, 300]);
+  const [mousePos, setMousePos] = useState([200, 300]);
 
   const rac1Ref = useRef();
   const rac2Ref = useRef();
 
   useFrame(({ mouse, viewport }) => {
     const racLoc = rac1Ref.current.position;
-    console.log(`racket location: ${racLoc}`);
+    // console.log(`racket location: ${{...racLoc}}`);
     // console.log(mouse.x, mouse.y)
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
   });
@@ -54,6 +54,7 @@ export default function Tennis_animation_compressed(props) {
           >
             <group name="Object_2">
               <group name="RootNode">
+                // Tennis ball
                 <RigidBody colliders="ball" restitution={2}>
                   <group
                     name="Tennis_Ball"
@@ -220,4 +221,4 @@ export default function Tennis_animation_compressed(props) {
   );
 }
 
-useGLTF.preload("../../../public/models/Tennis_animation_compressed.glb");
+useGLTF.preload("/models/Tennis_animation_compressed.glb");
