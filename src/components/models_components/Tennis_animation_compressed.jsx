@@ -5,8 +5,10 @@ Command: npx gltfjsx@6.1.4 Tennis_animation_compressed.glb
 
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RigidBody, RapierRigidBody, vec3 } from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
+
+import * as THREE from 'three';
 
 export default function Tennis_animation_compressed(props) {
 
@@ -22,13 +24,33 @@ export default function Tennis_animation_compressed(props) {
 
   const [mousePos, setMousePos] = useState([200, 1000]);
 
+  const [racket2Pos, setRacket2Pos] = useState([200, 0, 0]);
+
   const rac1Ref = useRef();
   const rac2Ref = useRef();
+  const ballRef = useRef();
+
+  const [ballVelocity, setBallVelocity] = useState(new THREE.Vector3(0, 0, 0));
+
+
 
   useFrame(({ mouse, viewport }) => {
-    const racLoc = rac1Ref.current.position;
-    // console.log(`racket location: ${{...racLoc}}`);
+    // const racLoc = rac1Ref.current.translation();
+    // console.log(`racket location: ${racLoc.x}, ${racLoc.y}, ${racLoc.z}`);
     // console.log(mouse.x, mouse.y)
+
+    if(ballRef.current){
+      const ballLoc = vec3(ballRef.current.translation());
+      console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`)
+
+      const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
+      const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
+
+      setRacket2Pos([200, ballLoc.y/3, Z/3])
+
+      const racket2Loc = vec3(rac1Ref.current.translation());
+      console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
+    }
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
   });
 
@@ -60,7 +82,16 @@ export default function Tennis_animation_compressed(props) {
                 <gridHelper args={[1000]} />
 
                 // Tennis ball
-                <RigidBody colliders="ball" restitution={2} position={[-200, 300, 0]} >
+                <RigidBody 
+                  ref = {ballRef}
+                  colliders="ball" 
+                  restitution={2} 
+                  position={[-40, 100, 0]}
+                  linearVelocity= {[-200, 100, 200]}
+                  // onCollisionExit={() => {
+                  //   setBallVelocity = new THREE.Vector3(-200, 100, 0);
+                  // }} 
+                >
                   <group
                     name="Tennis_Ball"
                     rotation={[0.7, 0, 0]}
@@ -80,6 +111,7 @@ export default function Tennis_animation_compressed(props) {
 
             // Left racket mesh
                 <RigidBody
+                  ref={rac1Ref}
                   type="kinematicPosition"
                   position={[ -200, (mousePos[1]) / 10, mousePos[0] / 10,]}
                   rotation={[0, -Math.PI/2, 0]}
@@ -89,7 +121,6 @@ export default function Tennis_animation_compressed(props) {
                     name="Tennis_Racketzz"
                     // rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
-                    ref={rac1Ref}
                     // castShadow
                     // receiveShadow
                   >
@@ -125,13 +156,17 @@ export default function Tennis_animation_compressed(props) {
                 </RigidBody>
 
             // Right racket mesh
-                <RigidBody>
+                <RigidBody
+                  type='kinematicPosition'
+                  // position={[200, 66.72, 0]}
+                  position = {racket2Pos}
+                >
                   <group
                     name="Tennis_Racketzz001"
-                    position={[228.03, 66.72, -44.56]}
+                    // position={[228.03, 66.72, -44.56]}
                     rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
-                    //ref={rac2Ref}
+                    ref={rac2Ref}
                     // castShadow
                     // receiveShadow
                   >
