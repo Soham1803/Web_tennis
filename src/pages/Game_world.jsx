@@ -27,8 +27,8 @@ const Game_world = () => {
         // ref={dirLight}
       />
 
-      <axesHelper args={[1000]} />
-      <gridHelper args={[1000]} />
+      {/* <axesHelper args={[2000]} />
+      <gridHelper args={[5000]} /> */}
 
       <Suspense>
         <Physics 
@@ -36,12 +36,12 @@ const Game_world = () => {
           debug 
         >
 
-          <RigidBody colliders='ball' restitution={2}>
+          {/* <RigidBody colliders='ball' restitution={2}>
             <mesh scale={[50, 50, 50]} position={[-130, 700, 30]} >
               <sphereBufferGeometry />
               <meshStandardMaterial />
             </mesh>
-          </RigidBody>
+          </RigidBody> */}
 
           <Tennis_animation_compressed />          
          

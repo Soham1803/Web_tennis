@@ -29,8 +29,14 @@ export default function Tennis_animation_compressed(props) {
   const rac1Ref = useRef();
   const rac2Ref = useRef();
   const ballRef = useRef();
+  const netRef = useRef();
 
   const [ballVelocity, setBallVelocity] = useState(new THREE.Vector3(0, 0, 0));
+
+  const  ballInit = () => {
+    ballRef.current.setTranslation({x: 0, y: 200, z: 0});
+    ballRef.current.setLinvel({x:-500, y:50, z:0});
+  }
 
 
 
@@ -39,19 +45,34 @@ export default function Tennis_animation_compressed(props) {
     // console.log(`racket location: ${racLoc.x}, ${racLoc.y}, ${racLoc.z}`);
     // console.log(mouse.x, mouse.y)
 
-    if(ballRef.current){
+    // For Rotated Axes:
+      // const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
+      // const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
+    
+    // Right racket motion
+    if(ballRef.current && rac2Ref.current){
       const ballLoc = vec3(ballRef.current.translation());
-      console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`)
+      console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
 
-      const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
-      const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
-
-      setRacket2Pos([200, ballLoc.y/3, Z/3])
-
-      const racket2Loc = vec3(rac1Ref.current.translation());
+      if(ballLoc.y > 80){
+        rac2Ref.current.setTranslation({x: 700, y: ballLoc.y, z: ballLoc.z});
+      }
+      const racket2Loc = vec3(rac2Ref.current.translation());
       console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
+
+      if(Math.abs(ballLoc.x) > 800 || Math.abs(ballLoc.z) > 300 ){
+        ballInit();
+      }
     }
+
+    // Left Racket motion
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
+    if((mouse.y * viewport.height)/10 + 200 > 80){
+      let leftRacketPos = {x: -700, y:(mouse.y * viewport.height)/10 + 200, z:(mouse.x * viewport.width)/10};
+      rac1Ref.current.setTranslation(leftRacketPos);
+    }
+
+    
   });
 
   // For pre built animation
@@ -72,22 +93,24 @@ export default function Tennis_animation_compressed(props) {
         >
           <group
             name="Tennis_CourtFBX"
-            rotation={[Math.PI / 2, Math.PI / 4, 0]}
+            rotation={[Math.PI / 2, 0, 0]}
           >
             <group name="Object_2">
               <group name="RootNode">
 
                 // Helpers
-                <axesHelper args={[1000]} />
-                <gridHelper args={[1000]} />
+                {/* <axesHelper args={[1000]} />
+                <gridHelper args={[1000]} /> */}
 
                 // Tennis ball
                 <RigidBody 
                   ref = {ballRef}
                   colliders="ball" 
-                  restitution={2} 
+                  restitution={1} 
                   position={[-40, 100, 0]}
-                  linearVelocity= {[-200, 100, 200]}
+                  linearVelocity= {[-500, 50, 0]}
+                  ccd
+                  onIntersectionEnter={ballInit}
                   // onCollisionExit={() => {
                   //   setBallVelocity = new THREE.Vector3(-200, 100, 0);
                   // }} 
@@ -108,18 +131,20 @@ export default function Tennis_animation_compressed(props) {
                     />
                   </group>
                 </RigidBody>
-
+                {/* <axesHelper  args={[1000]} />
+                <gridHelper args={[1000]} /> */}
             // Left racket mesh
                 <RigidBody
                   ref={rac1Ref}
                   type="kinematicPosition"
-                  position={[ -200, (mousePos[1]) / 10, mousePos[0] / 10,]}
-                  rotation={[0, -Math.PI/2, 0]}
+                  position={[ -200, 300, 0]}
+                  rotation={[0, Math.PI/2, Math.PI/20]}
+                  restitution={1}
                   ccd
                 >
                   <group
                     name="Tennis_Racketzz"
-                    // rotation={[0, -1.57, 0]}
+                    rotation={[0, 0, 0]}
                     scale={[0.03, 0.05, 0.02]}
                     // castShadow
                     // receiveShadow
@@ -159,14 +184,17 @@ export default function Tennis_animation_compressed(props) {
                 <RigidBody
                   type='kinematicPosition'
                   // position={[200, 66.72, 0]}
-                  position = {racket2Pos}
+                  ref={rac2Ref}
+                  position = {[200, 100, 0]}
+                  rotation={[0, 0, -Math.PI/20]}
+                  restitution={1}
+                  ccd
                 >
                   <group
                     name="Tennis_Racketzz001"
                     // position={[228.03, 66.72, -44.56]}
                     rotation={[0, -1.57, 0]}
                     scale={[0.03, 0.05, 0.02]}
-                    ref={rac2Ref}
                     // castShadow
                     // receiveShadow
                   >
@@ -251,7 +279,7 @@ export default function Tennis_animation_compressed(props) {
                     receiveShadow
                   />
                 </group>
-                <CuboidCollider args={[2, 15, 123]} position={[0, 10, 2]} />
+                <CuboidCollider args={[2, 15, 123]} position={[0, 10, 2]} sensor ref={netRef} />
 
               </group>
             </group>

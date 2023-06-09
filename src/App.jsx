@@ -23,7 +23,7 @@ function App() {
         fov: 75, 
         near: 0.1, 
         far: 5000, 
-        position: [-720, 300, 720] //left side
+        position: [-1000, 200, 0] //left side
         // position: [720, 300, -720] //right side
       }}
       shadows
