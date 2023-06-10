@@ -4,15 +4,26 @@ Command: npx gltfjsx@6.1.4 Tennis_animation_compressed.glb
 */
 
 import React, { useEffect, useRef, useState } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGLTF, useAnimations, useKeyboardControls } from "@react-three/drei";
 import { CuboidCollider, RigidBody, RapierRigidBody, vec3 } from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import * as THREE from 'three';
+import { Controls } from "../../App";
 
 export default function Tennis_animation_compressed(props) {
 
+  // KeyBoard Control checks
+  const upPressed = useKeyboardControls((state) => state[Controls.up]);
+  const downPressed = useKeyboardControls((state) => state[Controls.down]);
+  const leftPressed = useKeyboardControls((state) => state[Controls.left]);
+  const rightPressed = useKeyboardControls((state) => state[Controls.right]);
+
   const group = useRef();
+  const rac1Ref = useRef();
+  const rac2Ref = useRef();
+  const ballRef = useRef();
+  const netRef = useRef();
 
   const { nodes, materials, animations } = useGLTF(
     "/models/Tennis_animation_compressed.glb"
@@ -26,10 +37,6 @@ export default function Tennis_animation_compressed(props) {
 
   const [racket2Pos, setRacket2Pos] = useState([200, 0, 0]);
 
-  const rac1Ref = useRef();
-  const rac2Ref = useRef();
-  const ballRef = useRef();
-  const netRef = useRef();
 
   const [ballVelocity, setBallVelocity] = useState(new THREE.Vector3(0, 0, 0));
 
@@ -48,6 +55,10 @@ export default function Tennis_animation_compressed(props) {
     // For Rotated Axes:
       // const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
       // const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
+
+    // Initial racket rotations in quaternions  
+    const rac1Rotation = {w: 1.5, x: 0, y: Math.PI/2, z: 0};
+    const rac2Rotation = {w: 8, x: 0, y: Math.PI/2, z: 0};
     
     // Right racket motion
     if(ballRef.current && rac2Ref.current){
@@ -55,24 +66,56 @@ export default function Tennis_animation_compressed(props) {
       console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
 
       if(ballLoc.y > 80){
-        rac2Ref.current.setTranslation({x: 700, y: ballLoc.y, z: ballLoc.z});
+        rac2Ref.current.setTranslation({x: 700, y: ballLoc.y, z: ballLoc.z}, true);
       }
-      const racket2Loc = vec3(rac2Ref.current.translation());
-      console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
-
+      
       if(Math.abs(ballLoc.x) > 800 || Math.abs(ballLoc.z) > 300 ){
         ballInit();
       }
     }
+    const racket2Loc = vec3(rac2Ref.current.translation());
+    console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
 
-    // Left Racket motion
+    // Left Racket motion:
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
     if((mouse.y * viewport.height)/10 + 200 > 80){
       let leftRacketPos = {x: -700, y:(mouse.y * viewport.height)/10 + 200, z:(mouse.x * viewport.width)/10};
       rac1Ref.current.setTranslation(leftRacketPos);
     }
 
-    
+    // Left Racket rotations:
+    if(upPressed){
+      rac1Rotation.z += Math.PI/12;
+    }
+    if(downPressed){
+      rac1Rotation.z += -Math.PI/12;
+    }
+    if(leftPressed){
+      rac1Rotation.y += Math.PI/6;
+    }
+    if(rightPressed){
+      rac1Rotation.y += -Math.PI/6;
+    }
+    console.log(rac1Rotation)
+
+    rac1Ref.current.setRotation(rac1Rotation, true);
+
+    // Right racket rotations:
+    if(racket2Loc.y < 150){
+      rac2Rotation.z = -Math.PI/12;
+    }
+    if(racket2Loc.y > 250){
+      rac2Rotation.z = Math.PI/12;
+    }
+    if(racket2Loc.z > 100){
+      rac2Rotation.y = -Math.PI/6;
+    }
+    if(racket2Loc.z ){
+      rac2Rotation.y = Math.PI/6;
+    }
+
+    rac2Ref.current.setRotation(rac2Rotation, true);
+
   });
 
   // For pre built animation
@@ -138,7 +181,7 @@ export default function Tennis_animation_compressed(props) {
                   ref={rac1Ref}
                   type="kinematicPosition"
                   position={[ -200, 300, 0]}
-                  rotation={[0, Math.PI/2, Math.PI/20]}
+                  rotation={[0, 0, 0]}
                   restitution={1}
                   ccd
                 >
@@ -186,7 +229,7 @@ export default function Tennis_animation_compressed(props) {
                   // position={[200, 66.72, 0]}
                   ref={rac2Ref}
                   position = {[200, 100, 0]}
-                  rotation={[0, 0, -Math.PI/20]}
+                  rotation={[0, 0, 0]}
                   restitution={1}
                   ccd
                 >
