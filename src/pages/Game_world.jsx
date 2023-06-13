@@ -33,7 +33,7 @@ const Game_world = () => {
       <Suspense>
         <Physics 
           gravity={[0, -70, 0]} 
-          debug 
+          // debug 
         >
 
           {/* <RigidBody colliders='ball' restitution={2}>
