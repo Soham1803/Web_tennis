@@ -180,8 +180,7 @@ export default function Tennis_animation_compressed(props) {
                     />
                   </group>
                 </RigidBody>
-                {/* <axesHelper  args={[1000]} />
-                <gridHelper args={[1000]} /> */}
+
             // Left racket mesh
                 <RigidBody
                   ref={rac1Ref}
@@ -191,9 +190,11 @@ export default function Tennis_animation_compressed(props) {
                   restitution={1.5}
                   ccd
                 >
+
                 // Helpers (left-racket Scope)
                 {/* <axesHelper args={[1000]} />
                 <gridHelper args={[1000]} /> */}
+
                   <group
                     name="Tennis_Racketzz"
                     rotation={[0, Math.PI/2, 0]}
@@ -241,9 +242,11 @@ export default function Tennis_animation_compressed(props) {
                   restitution={1}
                   ccd
                 >
+
                 // Helpers (right-racket Scope)
                 {/* <axesHelper args={[1000]} />
                 <gridHelper args={[1000]} /> */}
+                
                   <group
                     name="Tennis_Racketzz001"
                     rotation={[0, -1.57, 0]}
