@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
-import { useMemo } from "react";
+import { KeyboardControls, Loader, OrbitControls } from "@react-three/drei";
+import { Suspense, useMemo } from "react";
 
 import Game_world from "./pages/Game_world";
 
@@ -49,8 +49,17 @@ function App() {
       >
         {/* <CustomCamera /> */}
         <OrbitControls />
-        <Game_world />
+        <Suspense>
+          <Game_world />
+        </Suspense>
       </Canvas>
+      <Loader 
+        containerStyles={{"background":"linear-gradient(134.33deg, #FF6CAB 1.14%, #7366FF 100%)"}}
+        innerStyles={{"height":"10px", "width":"500px", "border-radius":"12px"}}
+        barStyles={{"height":"10px", "width":"500px", "border-radius":"12px", "background-color":"#dab3ff"}}
+        dataStyles={{"font-size":"20px", "font-weight":"1000", "font-family":"monaco", "color":"#e6b3ff", "text-decoration":"underline"}}
+        dataInterpolation={(p) => `Loading ${p.toFixed(2)}%`}
+      />
     </KeyboardControls>
   );
 }
