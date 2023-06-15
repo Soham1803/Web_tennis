@@ -160,6 +160,8 @@ export default function Tennis_animation_compressed(props) {
                   linearVelocity= {[-500, 50, 0]}
                   ccd
                   onIntersectionEnter={ballInit}
+                  linearDamping={0}
+                  mass={2}
                   // onCollisionExit={() => {
                   //   setBallVelocity = new THREE.Vector3(-200, 100, 0);
                   // }} 
@@ -246,7 +248,7 @@ export default function Tennis_animation_compressed(props) {
                 // Helpers (right-racket Scope)
                 {/* <axesHelper args={[1000]} />
                 <gridHelper args={[1000]} /> */}
-                
+
                   <group
                     name="Tennis_Racketzz001"
                     rotation={[0, -1.57, 0]}
