@@ -49,9 +49,9 @@ function App() {
       >
         {/* <CustomCamera /> */}
         <OrbitControls />
-        <Suspense>
+        
           <Game_world />
-        </Suspense>
+        
       </Canvas>
       <Loader 
         containerStyles={{"background":"linear-gradient(134.33deg, #FF6CAB 1.14%, #7366FF 100%)"}}
