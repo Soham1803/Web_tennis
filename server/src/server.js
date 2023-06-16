@@ -1,12 +1,26 @@
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
-const io = require('socket.io');
+const { Server } = require('socket.io');
 
+const PORT = process.env.PORT || 3000;
 
-const PORT = process.env.PORT || 8000;
+const app = express();
 
-const httpServer = http.createServer(PORT);
+app.use(cors());
+
+const httpServer = http.createServer(app);
+
+const io = new Server(httpServer, {
+    cors: {
+        origin: 'http://localhost:5173',
+        methods: ['GET', 'POST'],
+    },
+})
+
+httpServer.listen(PORT, () => {
+    console.log("Server is running!!!");
+});
 
 
 
