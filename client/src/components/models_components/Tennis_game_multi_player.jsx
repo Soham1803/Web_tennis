@@ -11,7 +11,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from 'three';
 import { Controls } from "../../pages/MultiPlayer_env";
 
+import { io } from "socket.io-client";
+import { socket } from "../../pages/MultiPlayer_env";
+
 export default function Tennis_game_multi_player(props) {
+
+  const trackBall = () => {
+    socket.emit()
+  }
 
   // KeyBoard Control checks
   const upPressed = useKeyboardControls((state) => state[Controls.up]);

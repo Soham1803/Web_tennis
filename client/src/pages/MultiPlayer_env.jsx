@@ -4,6 +4,10 @@ import { Suspense, useMemo } from "react";
 
 import Game_world_multiplayer from "../components/world_components/Game_world_multiplayer";
 
+import io from "socket.io-client";
+
+export const socket = io.connect("http://localhost:3000");
+
 const CustomCamera = () => {
   const { camera, mouse } = useThree();
 

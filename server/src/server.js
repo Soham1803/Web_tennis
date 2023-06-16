@@ -18,6 +18,10 @@ const io = new Server(httpServer, {
     },
 })
 
+io.on('connection', (socket) => {
+    console.log(`User connected: ${socket.id}!!`)
+})
+
 httpServer.listen(PORT, () => {
     console.log("Server is running!!!");
 });
