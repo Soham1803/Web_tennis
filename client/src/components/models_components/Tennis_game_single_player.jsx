@@ -9,7 +9,7 @@ import { CuboidCollider, RigidBody, RapierRigidBody, vec3 } from "@react-three/r
 import { useFrame, useThree } from "@react-three/fiber";
 
 import * as THREE from 'three';
-import { Controls } from "../../App";
+import { Controls } from "../../pages/SinglePlayer_env";
 
 export default function Tennis_game_single_player(props) {
 

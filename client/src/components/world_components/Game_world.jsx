@@ -6,7 +6,7 @@ import { extend } from "@react-three/fiber";
 import { Environment, useHelper } from "@react-three/drei";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 
-import Tennis_game_single_player from "../components/models_components/Tennis_game_single_player";
+import Tennis_game_single_player from "../models_components/Tennis_game_single_player";
 
 
 const Game_world = () => {
