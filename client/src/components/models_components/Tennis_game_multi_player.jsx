@@ -28,6 +28,13 @@ export default function Tennis_game_multi_player(props) {
     console.log("Racket position sent");
   }
 
+  const trackRacketRotation = (rac1Rotation, rac2Rotation) => {
+    if(IS_REFEREE)
+      socket.emit('racketRotation', rac1Rotation);
+    else
+      socket.emit('racketRotation', rac2Rotation);
+  }
+
   // KeyBoard Control checks
   const upPressed = useKeyboardControls((state) => state[Controls.up]);
   const downPressed = useKeyboardControls((state) => state[Controls.down]);
@@ -59,9 +66,9 @@ export default function Tennis_game_multi_player(props) {
     ballRef.current.setLinvel({x:-500, y:50, z:0});
   }
   
-  let XRacketPOS;
   
   useEffect(() => {
+
     socket.on('gotBallPosTrack', (data) => {
       console.log(`Ball pos from sockets: ${data}`);
       if(!IS_REFEREE)
@@ -78,6 +85,15 @@ export default function Tennis_game_multi_player(props) {
 
       console.log(`Opponent racket position: ${position.x} ${position.y} ${position.z}`)
     })
+
+    socket.on('opponentRacketTilt', (tilt)=>{
+      if(IS_REFEREE){
+        rac2Ref.current.setRotation(tilt, true);
+      } else {
+        rac1Ref.current.setRotation(tilt, true);
+      }
+    })
+
   }, [socket]); 
   
 
@@ -90,7 +106,6 @@ export default function Tennis_game_multi_player(props) {
       // const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
       // const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
 
-    console.log(`Log XRacketPOS ${XRacketPOS}`);
     // Initial racket rotations in quaternions  
     const rac1Rotation = {w: Math.PI/2, x: 0, y: 0, z: 0};
     const rac2Rotation = {w: Math.PI, x: 0, y: 0, z: 0};
@@ -99,7 +114,7 @@ export default function Tennis_game_multi_player(props) {
     if(IS_REFEREE  && ballRef.current){
       const ballLoc = vec3(ballRef.current.translation());
 
-      trackBall({ballLoc});
+      trackBall(ballLoc);
       // console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
       
       if(Math.abs(ballLoc.x) > 800 || Math.abs(ballLoc.z) > 300 ){
@@ -158,9 +173,10 @@ export default function Tennis_game_multi_player(props) {
         rac2Rotation.y += Math.PI/15;
     }
     // console.log(rac1Rotation)
-
     rac1Ref.current.setRotation(rac1Rotation, true);
-
+    rac2Ref.current.setRotation(rac2Rotation, true);
+        
+    trackRacketRotation(rac1Rotation, rac2Rotation);
     // Right racket rotations:
     /** if(racket2Loc.y < 120){
       rac2Rotation.z = -Math.PI/15;
@@ -216,7 +232,8 @@ export default function Tennis_game_multi_player(props) {
                   ccd
                   onIntersectionEnter={ballInit}
                   linearDamping={0}
-                  mass={2}
+                  mass={IS_REFEREE ? 2 : 0}
+                  type={IS_REFEREE ? 'dynamic' : 'kinematicVelocity'}
                   // onCollisionExit={() => {
                   //   setBallVelocity = new THREE.Vector3(-200, 100, 0);
                   // }} 

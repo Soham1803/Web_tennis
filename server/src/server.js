@@ -42,6 +42,10 @@ io.on('connection', (socket) => {
     socket.on('myRacketPos', (racketPos) => {
         socket.broadcast.emit('opponentRacketPos', racketPos);
     })
+
+    socket.on('racketRotaion', (racketTilt) => {
+        socket.broadcast.emit('opponentRacketTilt', racketTilt);
+    })
 })
 
 httpServer.listen(PORT, () => {
