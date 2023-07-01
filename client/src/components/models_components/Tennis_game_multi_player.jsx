@@ -14,10 +14,14 @@ import { Controls } from "../../pages/MultiPlayer_env";
 import { io } from "socket.io-client";
 import { socket } from "../../pages/MultiPlayer_env";
 
+import { IS_REFEREE } from "../../pages/MultiPlayer_env";
+
+
+
 export default function Tennis_game_multi_player(props) {
 
-  const trackBall = () => {
-    socket.emit()
+  const trackBall = (output) => {
+    socket.emit('ballPosTrack', output)
   }
 
   // KeyBoard Control checks
@@ -48,9 +52,7 @@ export default function Tennis_game_multi_player(props) {
   const [ballVelocity, setBallVelocity] = useState(new THREE.Vector3(0, 0, 0));
 
   const  ballInit = () => {
-    setTimeout(() => {
-      console.log("Wait for 3 secs!")
-    }, 3000);
+    
     ballRef.current.setTranslation({x: 0, y: 200, z: 0});
     ballRef.current.setLinvel({x:-500, y:50, z:0});
   }
@@ -73,7 +75,9 @@ export default function Tennis_game_multi_player(props) {
     // Right racket motion
     if(ballRef.current && rac2Ref.current){
       const ballLoc = vec3(ballRef.current.translation());
-      console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
+
+      trackBall({ballLoc});
+      // console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
 
       if(ballLoc.y > 80){
         rac2Ref.current.setTranslation({x: 700, y: ballLoc.y, z: ballLoc.z}, true);
@@ -84,7 +88,7 @@ export default function Tennis_game_multi_player(props) {
       }
     }
     const racket2Loc = vec3(rac2Ref.current.translation());
-    console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
+    // console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
 
     // Left Racket motion:
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
@@ -109,7 +113,7 @@ export default function Tennis_game_multi_player(props) {
     if(rightPressed){
       rac1Rotation.y += -Math.PI/15;
     }
-    console.log(rac1Rotation)
+    // console.log(rac1Rotation)
 
     rac1Ref.current.setRotation(rac1Rotation, true);
 
@@ -130,6 +134,12 @@ export default function Tennis_game_multi_player(props) {
     rac2Ref.current.setRotation(rac2Rotation, true);
 
   });
+
+  useEffect(() => {
+    socket.on('gotBallPosTrack', (data) => {
+      console.log(`Ball pos from sockets: ${data}`);
+    })
+  }, [socket]);
 
   // For pre built animation
   /** useEffect(() => {
@@ -163,8 +173,8 @@ export default function Tennis_game_multi_player(props) {
                   ref = {ballRef}
                   colliders="ball" 
                   restitution={0.8} 
-                  position={[-40, 100, 0]}
-                  linearVelocity= {[-500, 50, 0]}
+                  position={[0, 100, 0]}
+                  linearVelocity= {IS_REFEREE ? [-500, 50, 0] : [0,0,0]}
                   ccd
                   onIntersectionEnter={ballInit}
                   linearDamping={0}
@@ -211,7 +221,7 @@ export default function Tennis_game_multi_player(props) {
                     // castShadow
                     // receiveShadow
                   >
-                    {console.log(...mousePos)};
+                    
                     <mesh
                       name="Tennis_Racketzz_02_-_Default_0"
                       geometry={

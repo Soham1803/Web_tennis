@@ -8,6 +8,18 @@ import io from "socket.io-client";
 
 export const socket = io.connect("http://localhost:3000");
 
+export let IS_REFEREE = false;
+
+socket.on('connect', ()=>{
+  console.log("Player connected!");
+
+})
+
+socket.on('startGame', (refereeID) => {
+  IS_REFEREE = true;
+  console.log(`The referee is: ${refereeID}`);
+})
+
 const CustomCamera = () => {
   const { camera, mouse } = useThree();
 
