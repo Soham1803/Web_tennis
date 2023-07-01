@@ -23,10 +23,12 @@ socket.on('startGame', (refereeID) => {
 const CustomCamera = () => {
   const { camera, mouse } = useThree();
 
-    return useFrame(() => {
+  return useFrame(() => {
     // camera.position.set(0, 700, 1000);  //Free position
-    camera.position.set(-720, 300, 720); // left side
-    // camera.position.set(720, 300, -720); //right side
+    if(IS_REFEREE)
+      camera.position.set(-950, 250, 0); // left side
+    else
+      camera.position.set(950, 250, 0); //right side
 
     camera.lookAt(0, 0, 0);
   });
@@ -62,7 +64,7 @@ const MultiPlayer_env = () => {
             shadows
             colorManagement
           >
-            {/* <CustomCamera /> */}
+            <CustomCamera />
             <OrbitControls />
             
               <Game_world_multiplayer />

@@ -16,12 +16,16 @@ import { socket } from "../../pages/MultiPlayer_env";
 
 import { IS_REFEREE } from "../../pages/MultiPlayer_env";
 
-
-
 export default function Tennis_game_multi_player(props) {
 
   const trackBall = (output) => {
     socket.emit('ballPosTrack', output)
+  }
+
+  const tracKOpponentRacket = (position) => {
+    console.log("Racket position sending");
+    socket.emit('myRacketPos', (position));
+    console.log("Racket position sent");
   }
 
   // KeyBoard Control checks
@@ -48,16 +52,34 @@ export default function Tennis_game_multi_player(props) {
 
   const [racket2Pos, setRacket2Pos] = useState([200, 0, 0]);
 
-
   const [ballVelocity, setBallVelocity] = useState(new THREE.Vector3(0, 0, 0));
 
   const  ballInit = () => {
-    
     ballRef.current.setTranslation({x: 0, y: 200, z: 0});
     ballRef.current.setLinvel({x:-500, y:50, z:0});
   }
+  
+  let XRacketPOS;
+  
+  useEffect(() => {
+    socket.on('gotBallPosTrack', (data) => {
+      console.log(`Ball pos from sockets: ${data}`);
+      if(!IS_REFEREE)
+        ballRef.current.setTranslation(data);
 
+    })
 
+    socket.on('opponentRacketPos', (position) => {
+      
+      if(IS_REFEREE)
+        rac2Ref.current.setTranslation(position);
+      else 
+        rac1Ref.current.setTranslation(position);
+
+      console.log(`Opponent racket position: ${position.x} ${position.y} ${position.z}`)
+    })
+  }, [socket]); 
+  
 
   useFrame(({ mouse, viewport }) => {
     // const racLoc = rac1Ref.current.translation();
@@ -68,57 +90,79 @@ export default function Tennis_game_multi_player(props) {
       // const Z = (ballLoc.z)*Math.cos(Math.PI/4) + (ballLoc.x)*Math.cos(Math.PI/4);
       // const X = (ballLoc.z)*Math.cos(Math.PI/4) - (ballLoc.x)*Math.cos(Math.PI/4);
 
+    console.log(`Log XRacketPOS ${XRacketPOS}`);
     // Initial racket rotations in quaternions  
     const rac1Rotation = {w: Math.PI/2, x: 0, y: 0, z: 0};
     const rac2Rotation = {w: Math.PI, x: 0, y: 0, z: 0};
     
-    // Right racket motion
-    if(ballRef.current && rac2Ref.current){
+    // Right racket motion (Specifically needed in single player gameplay.)
+    if(IS_REFEREE  && ballRef.current){
       const ballLoc = vec3(ballRef.current.translation());
 
       trackBall({ballLoc});
       // console.log(`ball location  ${ballLoc.x} ${ballLoc.y} ${ballLoc.z}`);
-
-      if(ballLoc.y > 80){
-        rac2Ref.current.setTranslation({x: 700, y: ballLoc.y, z: ballLoc.z}, true);
-      }
       
       if(Math.abs(ballLoc.x) > 800 || Math.abs(ballLoc.z) > 300 ){
         ballInit();
       }
     }
+
     const racket2Loc = vec3(rac2Ref.current.translation());
     // console.log(`racket location: ${racket2Loc.x} ${racket2Loc.y} ${racket2Loc.z}`);
 
     // Left Racket motion:
     setMousePos([mouse.x * viewport.width, mouse.y * viewport.height]);
-    if((mouse.y * viewport.height)/10 + 200 > 80){
-      let leftRacketPos = {x: -700, y:(mouse.y * viewport.height)/10 + 200, z:(mouse.x * viewport.width)/10};
-      // let rightRacketPos = {x: 700, y:(mouse.y * viewport.height)/10 + 200, z:(mouse.x * viewport.width)/10};
 
-      rac1Ref.current.setTranslation(leftRacketPos);
-      // rac2Ref.current.setTranslation(rightRacketPos);
+    if((mouse.y * viewport.height)/10 + 200 > 80){
+
+      let leftRacketPos;
+      let rightRacketPos;
+
+      if(IS_REFEREE){
+        leftRacketPos = {x: -700, y:(mouse.y * viewport.height)/10 + 200, z:(mouse.x * viewport.width)/10};
+        rac1Ref.current.setTranslation(leftRacketPos);
+        tracKOpponentRacket(leftRacketPos);
+        
+      }
+      else {
+        rightRacketPos = {x: 700, y:(mouse.y * viewport.height)/10 + 200, z:-(mouse.x * viewport.width)/10};
+        rac2Ref.current.setTranslation(rightRacketPos);
+        tracKOpponentRacket(rightRacketPos);
+        
+      }
     }
 
     // Left Racket rotations:
     if(upPressed){
-      rac1Rotation.z += Math.PI/12;
+      if(IS_REFEREE)
+        rac1Rotation.z += Math.PI/12;
+      else 
+        rac2Rotation.z -= Math.PI/12;
     }
     if(downPressed){
-      rac1Rotation.z += -Math.PI/12;
+      if(IS_REFEREE)
+        rac1Rotation.z -= Math.PI/12;
+      else 
+        rac2Rotation.z += Math.PI/12;
     }
     if(leftPressed){
-      rac1Rotation.y += Math.PI/15;
+      if(IS_REFEREE)
+        rac1Rotation.y += Math.PI/15;
+      else 
+        rac2Rotation.y -+ Math.PI/15;
     }
     if(rightPressed){
-      rac1Rotation.y += -Math.PI/15;
+      if(IS_REFEREE)
+        rac1Rotation.y -= Math.PI/15;
+      else 
+        rac2Rotation.y += Math.PI/15;
     }
     // console.log(rac1Rotation)
 
     rac1Ref.current.setRotation(rac1Rotation, true);
 
     // Right racket rotations:
-    if(racket2Loc.y < 120){
+    /** if(racket2Loc.y < 120){
       rac2Rotation.z = -Math.PI/15;
     }
     if(racket2Loc.y > 250){
@@ -131,15 +175,9 @@ export default function Tennis_game_multi_player(props) {
       rac2Rotation.y = Math.PI/15;
     }
 
-    rac2Ref.current.setRotation(rac2Rotation, true);
+    rac2Ref.current.setRotation(rac2Rotation, true); **/
 
   });
-
-  useEffect(() => {
-    socket.on('gotBallPosTrack', (data) => {
-      console.log(`Ball pos from sockets: ${data}`);
-    })
-  }, [socket]);
 
   // For pre built animation
   /** useEffect(() => {

@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     READY_PLAYER_COUNT++;
 
     if(READY_PLAYER_COUNT == 2){
-        
+
         console.log(`Referee is: ${socket.id}`);
         io.emit('startGame', socket.id);
         READY_PLAYER_COUNT = 0;
@@ -37,6 +37,10 @@ io.on('connection', (socket) => {
     socket.on('ballPosTrack', (data) => {
         // console.log(`Ball position: ${data}`);
         socket.broadcast.emit('gotBallPosTrack', data)
+    })
+
+    socket.on('myRacketPos', (racketPos) => {
+        socket.broadcast.emit('opponentRacketPos', racketPos);
     })
 })
 
