@@ -23,7 +23,7 @@ let READY_PLAYER_COUNT = 0;
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}!!`);
 
-    READY_PLAYER_COUNT++;
+    ++READY_PLAYER_COUNT;
 
     if(READY_PLAYER_COUNT == 2){
 
@@ -45,6 +45,10 @@ io.on('connection', (socket) => {
 
     socket.on('racketRotaion', (racketTilt) => {
         socket.broadcast.emit('opponentRacketTilt', racketTilt);
+    })
+
+    socket.on('disconnect', (reason) => {
+        console.log(`Client ${socket.id} disconncted. Reason: ${reason}`);
     })
 })
 

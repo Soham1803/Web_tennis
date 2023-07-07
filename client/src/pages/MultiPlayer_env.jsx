@@ -10,25 +10,29 @@ export const socket = io.connect("http://localhost:3000");
 
 export let IS_REFEREE = false;
 
+let myID;
+
 socket.on('connect', ()=>{
   console.log("Player connected!");
+  myID = socket.id;
 
 })
 
 socket.on('startGame', (refereeID) => {
-  IS_REFEREE = true;
+  IS_REFEREE = refereeID === myID;
   console.log(`The referee is: ${refereeID}`);
 })
 
 const CustomCamera = () => {
   const { camera, mouse } = useThree();
-
+  
+  if(IS_REFEREE) console.log('I am a referee!');
   return useFrame(() => {
     // camera.position.set(0, 700, 1000);  //Free position
-    if(IS_REFEREE)
-      camera.position.set(-950, 250, 0); // left side
+    if(!IS_REFEREE)
+      camera.position.set(950, 250, 0); // left side
     else
-      camera.position.set(950, 250, 0); //right side
+      camera.position.set(-950, 250, 0); //right side
 
     camera.lookAt(0, 0, 0);
   });
@@ -58,7 +62,7 @@ const MultiPlayer_env = () => {
               fov: 75, 
               near: 0.1, 
               far: 5000, 
-              position: [-1000, 200, 0] //left side
+              position: IS_REFEREE ? [-950, 250, 0]: [950, 250, 0] //left side
               // position: [720, 300, -720] //right side
             }}
             shadows
