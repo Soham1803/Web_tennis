@@ -161,7 +161,7 @@ export default function Tennis_game_single_player(props) {
                   ccd
                   onIntersectionEnter={ballInit}
                   linearDamping={0}
-                  mass={2}
+                  mass={10}
                   // onCollisionExit={() => {
                   //   setBallVelocity = new THREE.Vector3(-200, 100, 0);
                   // }} 
@@ -189,7 +189,7 @@ export default function Tennis_game_single_player(props) {
                   type="kinematicPosition"
                   position={[ -200, 300, 0]}
                   rotation={[0, 0, 0]}
-                  restitution={1.5}
+                  restitution={1}
                   ccd
                 >
 
